@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recipe Share</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div class="container">
+        <h1>Recipe Share</h1>
+        <p>Discover and share simple, delicious recipes with your community.</p>
+      </div>
+    </header>
+
+    <main class="container layout">
+      <section class="panel form-panel">
+        <h2>Add a Recipe</h2>
+        <form action="/recipes" method="POST" class="recipe-form">
+          <label>
+            Recipe Title
+            <input type="text" name="title" placeholder="e.g. Creamy Tomato Soup" required />
+          </label>
+
+          <label>
+            Author
+            <input type="text" name="author" placeholder="Your name" required />
+          </label>
+
+          <label>
+            Description
+            <textarea
+              name="description"
+              rows="4"
+              placeholder="Tell people how this recipe tastes and why you love it..."
+              required
+            ></textarea>
+          </label>
+
+          <div class="grid-2">
+            <label>
+              Prep Time
+              <input type="text" name="prepTime" placeholder="e.g. 25 min" />
+            </label>
+
+            <label>
+              Servings
+              <input type="number" name="servings" min="1" placeholder="e.g. 4" />
+            </label>
+          </div>
+
+          <label>
+            Tags
+            <input type="text" name="tags" placeholder="e.g. Vegan, Quick, Dinner" />
+          </label>
+
+          <button type="submit">Share Recipe</button>
+        </form>
+      </section>
+
+      <section class="panel feed-panel">
+        <div class="feed-header">
+          <h2>Latest Recipes</h2>
+          <span><%= recipes.length %> shared</span>
+        </div>
+
+        <div class="recipe-grid">
+          <% recipes.forEach((recipe) => { %>
+          <article class="recipe-card">
+            <div class="meta-row">
+              <span><%= recipe.prepTime %></span>
+              <span><%= recipe.servings %> servings</span>
+            </div>
+            <h3><%= recipe.title %></h3>
+            <p class="author">By <%= recipe.author %></p>
+            <p class="description"><%= recipe.description %></p>
+
+            <% if (recipe.tags?.length) { %>
+            <div class="tags">
+              <% recipe.tags.forEach((tag) => { %>
+              <span class="tag"><%= tag %></span>
+              <% }) %>
+            </div>
+            <% } %>
+
+            <div class="card-actions">
+              <form
+                action="/recipes/<%= recipe.id %>/delete"
+                method="POST"
+                class="delete-form"
+                data-title="<%= recipe.title %>"
+              >
+                <button type="submit" class="delete-button">Delete</button>
+              </form>
+            </div>
+          </article>
+          <% }) %>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      document.querySelectorAll(".delete-form").forEach((form) => {
+        form.addEventListener("submit", (event) => {
+          const title = form.dataset.title || "this recipe";
+          const confirmed = window.confirm(`Delete "${title}"?`);
+
+          if (!confirmed) {
+            event.preventDefault();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
