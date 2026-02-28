@@ -29,3 +29,8 @@ Optional database checks:
 npm run db:view
 npm run db:clear -- --help
 ```
+
+## Troubleshooting
+
+- If `npm` is not found on Windows PowerShell, use `C:\Program Files\nodejs\npm.cmd`.
+- If SQLite scripts fail, run `npm install` again and ensure `node_modules` exists.
